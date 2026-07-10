@@ -18,7 +18,19 @@ DataScope es una plataforma web para analizar conjuntos de datos de forma rápid
 - TypeScript
 - PostgreSQL
 
+## Estado del proyecto
 
+### V0.1 - Leer y analizar CSV básico
+
+Funcionalidades implementadas:
+
+- Lectura de archivos CSV.
+- Comprobar la existencia del archivo.
+- Comprobar la extensión.
+- Número de filas.
+- Número de columnas. 
+- Valores nulos por columna.
+- Filas duplicadas.
 
 
 Hoja de ruta:
