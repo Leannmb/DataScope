@@ -32,19 +32,25 @@ Funcionalidades implementadas:
 - Valores nulos por columna.
 - Filas duplicadas.
 
+### V0.2 - API REST
 
-Hoja de ruta:
+Funcionalidades implementadas:
 
-V 0.1 -> Leer y analizar archivo
+- API desarrollada con FastAPI.
+- Endpoint 'GET /'
+- Endpoint 'GET /health'
+- Endpoint 'GET /analyze'
+- Subida de archivos CSV.
+- Análisis mediante 'analyze_csv()'
+- Respuesta en formato JSON.
+- Documentación automática con Swagger
 
-V 0.2 -> Convertir a API
 
-V 0.3 -> Interfaz gráfica
+## Hoja de ruta:
+- [x] V0.1 Analizador básico de CSV
+- [x] V0.2 API REST
+- [] V0.3 Interfaz web
+- [] V0.4 Base de datos
+- [] V0.5 Sistema de usuarios
+- [] V1.0 Primera versión estable
 
-V 0.4 -> Persistencia
-
-V 0.5 -> Posibilidad de crear proyectos
-
-V 0.6 -> Autentificación
-
-Todo susceptible a cambios.
