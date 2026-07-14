@@ -45,11 +45,23 @@ Funcionalidades implementadas:
 - Respuesta en formato JSON.
 - Documentación automática con Swagger
 
+### V0.3 - Frontend 
+
+Implementado:
+
+- Frontend desarrollado con Vue.
+- TypeScript.
+- Selección de archivos CSV.
+- Comunicación con la API mediante HTTP POST.
+- Visualización de los resultados del análisis.
+- Gestión de errores.
+- Integración completa entre frontend y backend.
+
 
 ## Hoja de ruta:
 - [x] V0.1 Analizador básico de CSV
 - [x] V0.2 API REST
-- [] V0.3 Interfaz web
+- [x] V0.3 Interfaz web
 - [] V0.4 Base de datos
 - [] V0.5 Sistema de usuarios
 - [] V1.0 Primera versión estable
