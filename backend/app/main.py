@@ -1,20 +1,21 @@
-from analyzer import analyze_csv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-def main() -> None:
-    file_path = input("Ingrese la ruta del archivo CSV: ")
+from app.api.routes import router
 
-    try:
 
-        result = analyze_csv(file_path)
+app = FastAPI(
+    title="DataScope API",
+    description="API para analizar conjuntos de datos.",
+    version="0.4.0",
+)
 
-        print("\nResultado del analisis:")
-        print("---------------------------")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-        for key, value in result.items():
-            print(f"{key}: {value}")
-
-    except (FileNotFoundError, ValueError, UnicodeDecodeError) as e:
-        print(f"Error: {e}")
-
-if __name__ == "__main__":
-    main()
+app.include_router(router)
