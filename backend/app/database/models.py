@@ -1,10 +1,11 @@
 from datetime import datetime
 
 from sqlalchemy import DateTime, Integer, String, func
-from sqlalchemy.dialects.postgresql import JSONB 
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.database.connection import Base 
+from app.database.connection import Base
+
 
 class Analysis(Base):
     __tablename__ = "analysis"
@@ -24,7 +25,7 @@ class Analysis(Base):
         nullable=False,
     )
 
-    columns: Mapped[int] = mapped_column(
+    columns: Mapped[list[str]] = mapped_column(
         JSONB,
         nullable=False,
     )

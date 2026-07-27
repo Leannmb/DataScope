@@ -2,12 +2,24 @@ from pathlib import Path
 from shutil import copyfileobj
 from tempfile import NamedTemporaryFile
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from sqlalchemy.orm import Session
 
+from app.database.connection import SessionLocal
+from app.database.models import Analysis
+from app.database.repository import save_analysis
 from app.services.analyzer import analyze_csv
 
-
 router = APIRouter()
+
+
+def get_db():
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @router.get("/")
@@ -25,7 +37,10 @@ def health_check() -> dict[str, str]:
 
 
 @router.post("/analyze")
-def analyze_uploaded_csv(file: UploadFile = File(...)) -> dict:
+def analyze_uploaded_csv(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+) -> dict:
     if not file.filename:
         raise HTTPException(
             status_code=400,
@@ -51,6 +66,14 @@ def analyze_uploaded_csv(file: UploadFile = File(...)) -> dict:
         analysis = analyze_csv(str(temporary_path))
         analysis["filename"] = file.filename
 
+        analysis_record = Analysis(
+            filename=analysis["filename"],
+            rows=analysis["rows"],
+            columns=analysis["column_names"],
+        )
+
+        save_analysis(db, analysis_record)
+
         return analysis
 
     except (ValueError, UnicodeDecodeError) as error:
@@ -60,6 +83,8 @@ def analyze_uploaded_csv(file: UploadFile = File(...)) -> dict:
         ) from error
 
     except Exception as error:
+        db.rollback()
+
         raise HTTPException(
             status_code=500,
             detail="Error interno del servidor.",

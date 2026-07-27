@@ -57,12 +57,27 @@ Implementado:
 - Gestión de errores.
 - Integración completa entre frontend y backend.
 
+### V0.4 - Persistencia de datos
+
+Funcionalidades implementadas:
+
+- Integración con PostgreSQL.
+- Modelado de datos mediante SQLAlchemy.
+- Gestión de migraciones usando Alembic.
+- Creación automática de la tabla 'analysis'.
+- Persistencia de cada análisis realizado.
+- Registro del nombre del archivo, número de filas, columnas y fecha de creación.
+
 
 ## Hoja de ruta:
 - [x] V0.1 Analizador básico de CSV
 - [x] V0.2 API REST
 - [x] V0.3 Interfaz web
-- [] V0.4 Base de datos
-- [] V0.5 Sistema de usuarios
+- [x] V0.4 Base de datos
+- [] V0.5 Historial de análisis
+- [] V0.6 Sistema de autenticación de usuarios
+- [] V0.7 Dashboard con estadísticas
+- [] V0.8 Visualización de gráficos
+- [] V0.9 Exportación de resultados
 - [] V1.0 Primera versión estable
 
