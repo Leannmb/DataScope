@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.database.connection import SessionLocal
 from app.database.models import Analysis
-from app.database.repository import save_analysis
+from app.database.repository import save_analysis, get_all_analyses 
 from app.services.analyzer import analyze_csv
 
 router = APIRouter()
@@ -35,6 +35,23 @@ def read_root() -> dict[str, str]:
 def health_check() -> dict[str, str]:
     return {"status": "healthy"}
 
+@router.get("/analyses")
+def get_analyses(
+    db: Session = Depends(get_db),
+) -> list[dict]:
+    analyses = get_all_analyses(db)
+
+    return [
+        {
+            "id": analysis.id,
+            "filename": analysis.filename,
+            "rows": analysis.rows,
+            "columns": analysis.columns,
+            "created_at": analysis.created_at,
+        }
+        for analysis in analyses
+    ]
+    
 
 @router.post("/analyze")
 def analyze_uploaded_csv(

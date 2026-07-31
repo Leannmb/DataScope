@@ -1,23 +1,43 @@
 <script setup lang="ts">
-import { h, ref } from 'vue';
+import { ref } from 'vue'
 
+import AnalysisForm from './components/AnalysisForm.vue'
+import AnalysisHistory from './components/AnalysisHistory.vue'
+import AnalysisResults from './components/AnalysisResults.vue'
+import NavigationTabs from './components/NavigationTabs.vue'
 
-interface AnalysisResult{
-  filename: string
-  rows: number
-  columns: number
-  column_names: string[]
-  missing_values: Record<string, number>
-  duplicates: number
-}
+import {
+  analyzeCsv,
+  getAnalysisHistory,
+} from './services/api'
 
-const selectedFile = ref<File | null>(null);
+import type {
+  AnalysisHistoryItem,
+  AnalysisResult,
+} from './types/analysis'
+
+type ActiveView = 'analyze' | 'history'
+
+const selectedFile = ref<File | null>(null)
 const analysis = ref<AnalysisResult | null>(null)
 const errorMessage = ref('')
 const isLoading = ref(false)
 
+const analysisHistory = ref<AnalysisHistoryItem[]>([])
+const isHistoryLoading = ref(false)
+const historyErrorMessage = ref('')
 
-function handleFileChange(event: Event) : void {
+const activeView = ref<ActiveView>('analyze')
+
+async function changeView(view: ActiveView): Promise<void> {
+  activeView.value = view
+
+  if (view === 'history') {
+    await loadAnalysisHistory()
+  }
+}
+
+function handleFileChange(event: Event): void {
   const input = event.target as HTMLInputElement
 
   selectedFile.value = input.files?.[0] ?? null
@@ -26,7 +46,7 @@ function handleFileChange(event: Event) : void {
 }
 
 async function analyzeFile(): Promise<void> {
-  if (!selectedFile.value){
+  if (!selectedFile.value) {
     return
   }
 
@@ -34,87 +54,63 @@ async function analyzeFile(): Promise<void> {
   analysis.value = null
   errorMessage.value = ''
 
-  const formData = new FormData()
-  formData.append('file', selectedFile.value)
-
-  try { 
-    const response = await fetch("http://127.0.0.1:8000/analyze", {
-      method: "POST",
-      body: formData
-    })
-
-    const responseData = await response.json() 
-
-    if(!response.ok){
-      throw new Error(responseData.detail ?? 'No se pudo analizar el archivo')
-    }
-
-    analysis.value = responseData as AnalysisResult
+  try {
+    analysis.value = await analyzeCsv(selectedFile.value)
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Ocurrió un error desconocido'
+    errorMessage.value =
+      error instanceof Error
+        ? error.message
+        : 'Ocurrió un error desconocido'
   } finally {
     isLoading.value = false
   }
 }
 
+async function loadAnalysisHistory(): Promise<void> {
+  isHistoryLoading.value = true
+  historyErrorMessage.value = ''
+
+  try {
+    analysisHistory.value = await getAnalysisHistory()
+  } catch (error) {
+    historyErrorMessage.value =
+      error instanceof Error
+        ? error.message
+        : 'Ocurrió un error desconocido'
+  } finally {
+    isHistoryLoading.value = false
+  }
+}
 </script>
 
 <template>
   <main>
     <h1>DataScope</h1>
 
-    <p>Selecciona un archivo CSV para analizarlo.</p>
+    <NavigationTabs
+      :active-view="activeView"
+      @change-view="changeView"
+    />
 
-    <input
-      type="file"
-      accept=".csv"
-      @change="handleFileChange"
+    <AnalysisForm
+      v-if="activeView === 'analyze'"
+      :selected-file="selectedFile"
+      :is-loading="isLoading"
+      :error-message="errorMessage"
+      @file-change="handleFileChange"
+      @analyze="analyzeFile"
     >
+      <AnalysisResults
+        v-if="analysis"
+        :analysis="analysis"
+      />
+    </AnalysisForm>
 
-    <p v-if="selectedFile">  
-      Archivo seleccionado: {{ selectedFile.name }}
-    </p>
-
-    <button :disabled="!selectedFile || isLoading" 
-    @click="analyzeFile"
-    >
-      {{ isLoading ? 'Analizando...' : 'Analizar' }}
-    
-    </button>
-
-    <p v-if="errorMessage">
-      Error: {{ errorMessage }}
-    </p>>
-
-    <section v-if="analysis"> 
-      <h2>Resultados del análisis</h2>
-
-      <p><strong>Archivo:</strong> {{ analysis.filename }}</p>
-      <p><strong>Filas:</strong> {{ analysis.rows }}</p>
-      <p><strong>Columnas:</strong> {{ analysis.columns }}</p>
-      <p><strong>Duplicados:</strong> {{ analysis.duplicates }}</p>
-      
-     <h3>Nombres de las columnas</h3>
-
-     <ul>
-        <li
-          v-for="column in analysis.column_names"
-          :key="column"
-        >
-          {{ column }}
-        </li>
-      </ul>
-
-      <h3>Valores nulos</h3>
-
-      <ul>
-        <li
-          v-for="(missingCount, column) in analysis.missing_values"
-          :key="column"
-        >
-          {{ column }}: {{ missingCount }}
-        </li>
-      </ul>
-    </section>
+    <AnalysisHistory
+      v-else
+      :items="analysisHistory"
+      :is-loading="isHistoryLoading"
+      :error-message="historyErrorMessage"
+    />
   </main>
 </template>

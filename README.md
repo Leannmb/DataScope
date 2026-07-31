@@ -12,11 +12,20 @@ DataScope es una plataforma web para analizar conjuntos de datos de forma rápid
 
 ## Tecnologías
 
+### Backend
+
 - Python
 - FastAPI
-- React
-- TypeScript
+- SQLAlchemy
+- Alembic
 - PostgreSQL
+
+### Frontend
+
+- Vue 3
+- TypeScript
+- Vite
+- CSS3
 
 ## Estado del proyecto
 
@@ -37,9 +46,9 @@ Funcionalidades implementadas:
 Funcionalidades implementadas:
 
 - API desarrollada con FastAPI.
-- Endpoint 'GET /'
-- Endpoint 'GET /health'
-- Endpoint 'GET /analyze'
+- Endpoint GET /
+- Endpoint GET /health
+- Endpoint POST /analyze
 - Subida de archivos CSV.
 - Análisis mediante 'analyze_csv()'
 - Respuesta en formato JSON.
@@ -68,13 +77,26 @@ Funcionalidades implementadas:
 - Persistencia de cada análisis realizado.
 - Registro del nombre del archivo, número de filas, columnas y fecha de creación.
 
+### V0.5 - Historial de análisis y mejora de la arquitectura
+
+Funcionalidades implementadas:
+
+- Consulta del historial de análisis.
+- Visualización del historial desde el frontend.
+- Navegación entre análisis e historial mediante pestañas.
+- Refactorización del frontend mediante componentes reutilizables.
+- Centralización de tipos TypeScript.
+- Creación de un servicio dedicado para la comunicación con la API.
+- Mejora de la interfaz de usuario.
+- Diseño responsive.
+
 
 ## Hoja de ruta:
 - [x] V0.1 Analizador básico de CSV
 - [x] V0.2 API REST
 - [x] V0.3 Interfaz web
 - [x] V0.4 Base de datos
-- [] V0.5 Historial de análisis
+- [x] V0.5 Historial de análisis y mejora de la arquitectura
 - [] V0.6 Sistema de autenticación de usuarios
 - [] V0.7 Dashboard con estadísticas
 - [] V0.8 Visualización de gráficos
