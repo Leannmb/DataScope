@@ -6,9 +6,18 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from app.database.connection import SessionLocal
-from app.database.models import Analysis
-from app.database.repository import save_analysis, get_all_analyses 
+from app.database.models import Analysis, User
+from app.database.repositories.analysis_repository import (
+    get_user_analyses,
+    save_analysis,
+)
+from app.schemas.analysis import (
+    AnalysisHistoryResponse,
+    AnalysisResponse,
+)
 from app.services.analyzer import analyze_csv
+from app.services.auth import get_current_user
+
 
 router = APIRouter()
 
@@ -26,7 +35,7 @@ def get_db():
 def read_root() -> dict[str, str]:
     return {
         "name": "DataScope API",
-        "version": "0.4.0",
+        "version": "0.6.0",
         "status": "running",
     }
 
@@ -35,28 +44,29 @@ def read_root() -> dict[str, str]:
 def health_check() -> dict[str, str]:
     return {"status": "healthy"}
 
-@router.get("/analyses")
+
+@router.get(
+    "/analyses",
+    response_model=list[AnalysisHistoryResponse],
+)
 def get_analyses(
     db: Session = Depends(get_db),
-) -> list[dict]:
-    analyses = get_all_analyses(db)
+    current_user: User = Depends(get_current_user),
+) -> list[Analysis]:
+    return get_user_analyses(
+        db,
+        current_user.id,
+    )
 
-    return [
-        {
-            "id": analysis.id,
-            "filename": analysis.filename,
-            "rows": analysis.rows,
-            "columns": analysis.columns,
-            "created_at": analysis.created_at,
-        }
-        for analysis in analyses
-    ]
-    
 
-@router.post("/analyze")
+@router.post(
+    "/analyze",
+    response_model=AnalysisResponse,
+)
 def analyze_uploaded_csv(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> dict:
     if not file.filename:
         raise HTTPException(
@@ -87,9 +97,13 @@ def analyze_uploaded_csv(
             filename=analysis["filename"],
             rows=analysis["rows"],
             columns=analysis["column_names"],
+            user_id=current_user.id,
         )
 
-        save_analysis(db, analysis_record)
+        save_analysis(
+            db,
+            analysis_record,
+        )
 
         return analysis
 

@@ -3,7 +3,34 @@ import type {
   AnalysisResult,
 } from '../types/analysis'
 
+import { getToken } from './token'
+
 const API_URL = 'http://127.0.0.1:8000'
+
+
+async function apiFetch(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<Response> {
+  const token = getToken()
+  const headers = new Headers(options.headers)
+
+  if (token !== null) {
+    headers.set(
+      'Authorization',
+      `Bearer ${token}`,
+    )
+  }
+
+  return fetch(
+    `${API_URL}${endpoint}`,
+    {
+      ...options,
+      headers,
+    },
+  )
+}
+
 
 export async function analyzeCsv(
   file: File,
@@ -11,10 +38,13 @@ export async function analyzeCsv(
   const formData = new FormData()
   formData.append('file', file)
 
-  const response = await fetch(`${API_URL}/analyze`, {
-    method: 'POST',
-    body: formData,
-  })
+  const response = await apiFetch(
+    '/analyze',
+    {
+      method: 'POST',
+      body: formData,
+    },
+  )
 
   const responseData = await response.json()
 
@@ -27,11 +57,11 @@ export async function analyzeCsv(
   return responseData as AnalysisResult
 }
 
+
 export async function getAnalysisHistory(): Promise<
   AnalysisHistoryItem[]
 > {
-  const response = await fetch(`${API_URL}/analyses`)
-
+  const response = await apiFetch('/analyses')
   const responseData = await response.json()
 
   if (!response.ok) {

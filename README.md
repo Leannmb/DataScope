@@ -19,6 +19,8 @@ DataScope es una plataforma web para analizar conjuntos de datos de forma rápid
 - SQLAlchemy
 - Alembic
 - PostgreSQL
+- JWT
+- Passlib (bcrypt)
 
 ### Frontend
 
@@ -27,7 +29,7 @@ DataScope es una plataforma web para analizar conjuntos de datos de forma rápid
 - Vite
 - CSS3
 
-## Estado del proyecto
+## Versiones 
 
 ### V0.1 - Leer y analizar CSV básico
 
@@ -90,6 +92,21 @@ Funcionalidades implementadas:
 - Mejora de la interfaz de usuario.
 - Diseño responsive.
 
+### V0.6 - Sistema de autenticación
+
+Funcionalidades implementadas:
+
+- Sistema de registro de usuarios.
+- Inicio de sesión mediante JWT
+- Contraseñas almacenadas de forma segura mediante hash (bcrypt).
+- Persistencia de la sesión mediante localStorage.
+- Protección de endpoints mediante localStorage.
+- Asociación de análisis a cada usuario.
+- Consulta únicamente del historial del usuario autenticado. 
+- Cierre de sesión. 
+- Separación de la lógica de autenticación en servicios detallados
+
+
 
 ## Hoja de ruta:
 - [x] V0.1 Analizador básico de CSV
@@ -97,7 +114,7 @@ Funcionalidades implementadas:
 - [x] V0.3 Interfaz web
 - [x] V0.4 Base de datos
 - [x] V0.5 Historial de análisis y mejora de la arquitectura
-- [] V0.6 Sistema de autenticación de usuarios
+- [x] V0.6 Sistema de autenticación de usuarios
 - [] V0.7 Dashboard con estadísticas
 - [] V0.8 Visualización de gráficos
 - [] V0.9 Exportación de resultados
