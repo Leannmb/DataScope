@@ -1,10 +1,32 @@
+export interface ColumnType {
+  name: string
+  type: string
+}
+
+export interface NumericStatistics {
+  name: string
+  count: number
+  unique: number
+  mean: number | null
+  median: number | null
+  std: number | null
+  min: number | null
+  q1: number | null
+  q3: number | null
+  max: number | null
+}
+
 export interface AnalysisResult {
   filename: string
   rows: number
   columns: number
   column_names: string[]
+  column_types: ColumnType[]
+  numeric_statistics: NumericStatistics[]
   missing_values: Record<string, number>
+  missing_percentage: number
   duplicates: number
+  size_bytes: number
 }
 
 export interface AnalysisHistoryItem {

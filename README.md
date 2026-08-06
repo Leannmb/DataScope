@@ -106,7 +106,17 @@ Funcionalidades implementadas:
 - Cierre de sesión. 
 - Separación de la lógica de autenticación en servicios detallados
 
+### V0.7 - Dashboard con estadísticas
 
+Funcionalidades implementadas:
+
+- Diseño responsive para escritorio y dispositivos móviles.
+- Rediseño de la visualización de los resultados del análisis.
+- Tarjetas resumen con las métricas principales.
+- Visualización organizada de tipos de columnas y estadísticas numéricas.
+- Mejora de la experiencia de usuario durante el análisis.
+- Gestión automática de la expiración de sesión.
+- Validación del funcionamiento con distintos tipos de datasets.
 
 ## Hoja de ruta:
 - [x] V0.1 Analizador básico de CSV
@@ -115,7 +125,7 @@ Funcionalidades implementadas:
 - [x] V0.4 Base de datos
 - [x] V0.5 Historial de análisis y mejora de la arquitectura
 - [x] V0.6 Sistema de autenticación de usuarios
-- [] V0.7 Dashboard con estadísticas
+- [x] V0.7 Dashboard con estadísticas
 - [] V0.8 Visualización de gráficos
 - [] V0.9 Exportación de resultados
 - [] V1.0 Primera versión estable

@@ -1,0 +1,6 @@
+﻿id,producto,precio,cantidad,descuento,activo,fecha,categoria,almacen,valoracion
+1,Teclado,39.99,2,0.1,True,2026-01-10,Periféricos,A,4.5
+2,Ratón,24.5,1,0.0,True,2026-01-11,Periféricos,B,4.2
+3,Monitor,199.99,1,0.15,False,2026-01-12,Pantallas,A,4.8
+4,Webcam,59.9,3,,True,2026-01-13,Accesorios,C,
+5,Auriculares,79.0,2,0.05,True,2026-01-14,Audio,B,4.4

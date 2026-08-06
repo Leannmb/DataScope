@@ -2,6 +2,7 @@ import type {
   AnalysisHistoryItem,
   AnalysisResult,
 } from '../types/analysis'
+import { notifySessionExpired } from './session'
 
 import { getToken } from './token'
 
@@ -22,13 +23,20 @@ async function apiFetch(
     )
   }
 
-  return fetch(
+  const response = await fetch(
     `${API_URL}${endpoint}`,
     {
       ...options,
       headers,
     },
   )
+
+  if (response.status === 401) {
+    console.log('401 detectado')
+    notifySessionExpired()
+  }
+
+  return response
 }
 
 

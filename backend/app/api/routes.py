@@ -1,3 +1,4 @@
+import traceback
 from pathlib import Path
 from shutil import copyfileobj
 from tempfile import NamedTemporaryFile
@@ -35,7 +36,7 @@ def get_db():
 def read_root() -> dict[str, str]:
     return {
         "name": "DataScope API",
-        "version": "0.6.0",
+        "version": "0.7.0",
         "status": "running",
     }
 
@@ -87,10 +88,19 @@ def analyze_uploaded_csv(
             delete=False,
             suffix=".csv",
         ) as temporary_file:
-            copyfileobj(file.file, temporary_file)
-            temporary_path = Path(temporary_file.name)
+            copyfileobj(
+                file.file,
+                temporary_file,
+            )
 
-        analysis = analyze_csv(str(temporary_path))
+            temporary_path = Path(
+                temporary_file.name
+            )
+
+        analysis = analyze_csv(
+            str(temporary_path)
+        )
+
         analysis["filename"] = file.filename
 
         analysis_record = Analysis(
@@ -107,7 +117,10 @@ def analyze_uploaded_csv(
 
         return analysis
 
-    except (ValueError, UnicodeDecodeError) as error:
+    except (
+        ValueError,
+        UnicodeDecodeError,
+    ) as error:
         raise HTTPException(
             status_code=400,
             detail=str(error),
@@ -115,6 +128,8 @@ def analyze_uploaded_csv(
 
     except Exception as error:
         db.rollback()
+
+        traceback.print_exc()
 
         raise HTTPException(
             status_code=500,
@@ -124,5 +139,8 @@ def analyze_uploaded_csv(
     finally:
         file.file.close()
 
-        if temporary_path is not None and temporary_path.exists():
+        if (
+            temporary_path is not None
+            and temporary_path.exists()
+        ):
             temporary_path.unlink()

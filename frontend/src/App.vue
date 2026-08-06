@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
+import { SESSION_EXPIRED_EVENT } from './services/session'
 import AnalysisForm from './components/AnalysisForm.vue'
 import AnalysisHistory from './components/AnalysisHistory.vue'
 import AnalysisResults from './components/AnalysisResults.vue'
 import LoginForm from './components/LoginForm.vue'
 import NavigationTabs from './components/NavigationTabs.vue'
 import RegisterForm from './components/RegisterForm.vue'
+
 
 import {
   analyzeCsv,
@@ -141,6 +143,24 @@ function handleLogout(): void {
   authenticationError.value = ''
 }
 
+function handleSessionExpired(): void {
+  console.log('Sesión expirada')
+
+  removeToken()
+
+  currentView.value = 'login'
+  activeView.value = 'analyze'
+
+  selectedFile.value = null
+  analysis.value = null
+  analysisHistory.value = []
+
+  errorMessage.value = ''
+  historyErrorMessage.value = ''
+
+  authenticationError.value =
+    'Tu sesión ha expirado. Inicia sesión de nuevo.'
+}
 
 async function changeView(
   view: ActiveView,
@@ -202,6 +222,20 @@ async function loadAnalysisHistory(): Promise<void> {
     isHistoryLoading.value = false
   }
 }
+
+onMounted(() => {
+  window.addEventListener(
+    SESSION_EXPIRED_EVENT,
+    handleSessionExpired,
+  )
+})
+
+onUnmounted(() => {
+  window.removeEventListener(
+    SESSION_EXPIRED_EVENT,
+    handleSessionExpired,
+  )
+})
 </script>
 
 <template>
