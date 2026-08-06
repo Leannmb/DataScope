@@ -19,6 +19,8 @@ from app.schemas.analysis import (
 from app.services.analyzer import analyze_csv
 from app.services.auth import get_current_user
 
+from fastapi.responses import StreamingResponse
+from app.services.pdf_report import build_pdf_report
 
 router = APIRouter()
 
@@ -144,3 +146,26 @@ def analyze_uploaded_csv(
             and temporary_path.exists()
         ):
             temporary_path.unlink()
+
+@router.post("/export/pdf")
+def export_analysis_pdf(
+    analysis: AnalysisResponse,
+    current_user: User = Depends(get_current_user),
+) -> StreamingResponse:
+    pdf_buffer = build_pdf_report(
+        analysis.model_dump()
+    )
+
+    base_filename = Path(
+        analysis.filename
+    ).stem
+
+    return StreamingResponse(
+        pdf_buffer,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{base_filename}_report.pdf"'
+            )
+        },
+    )

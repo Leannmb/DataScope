@@ -517,3 +517,29 @@ th:nth-child(2) {
     grid-template-columns: 1fr;
   }
 }
+
+.export-button {
+  flex-shrink: 0;
+}
+
+@media (max-width: 42rem) {
+  .export-button {
+    width: 100%;
+  }
+}
+
+.export-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+@media (max-width: 42rem) {
+  .export-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .export-button {
+    width: 100%;
+  }
+}

@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import type { AnalysisResult } from '../types/analysis'
+
+import {
+  downloadJson,
+  downloadPdf,
+} from '../services/export'
+
 import HistogramChart from './HistogramChart.vue'
 
-defineProps<{
+const props = defineProps<{
   analysis: AnalysisResult
 }>()
 
@@ -31,6 +37,32 @@ function formatStatistic(value: number | null): string {
     maximumFractionDigits: 2,
   })
 }
+
+function exportAnalysis(): void {
+  const baseFilename = props.analysis.filename.replace(
+    /\.csv$/i,
+    '',
+  )
+
+  downloadJson(
+    `${baseFilename}_analysis.json`,
+    props.analysis,
+  )
+}
+
+async function exportPdf(): Promise<void> {
+  try {
+    await downloadPdf(
+      props.analysis,
+    )
+  } catch (error) {
+    console.error(error)
+
+    alert(
+      'No se pudo generar el PDF.',
+    )
+  }
+}
 </script>
 
 <template>
@@ -42,6 +74,24 @@ function formatStatistic(value: number | null): string {
         </p>
 
         <h2>{{ analysis.filename }}</h2>
+      </div>
+
+      <div class="export-actions">
+        <button
+          type="button"
+          class="export-button"
+          @click="exportAnalysis"
+        >
+          Descargar JSON
+        </button>
+
+        <button
+          type="button"
+          class="export-button"
+          @click="exportPdf"
+        >
+          Descargar PDF
+        </button>
       </div>
     </header>
 
@@ -68,7 +118,9 @@ function formatStatistic(value: number | null): string {
 
       <article class="summary-card">
         <span>Tamaño</span>
-        <strong>{{ formatFileSize(analysis.size_bytes) }}</strong>
+        <strong>
+          {{ formatFileSize(analysis.size_bytes) }}
+        </strong>
       </article>
     </div>
 
@@ -103,7 +155,11 @@ function formatStatistic(value: number | null): string {
     <section class="analysis-section">
       <h3>Estadísticas numéricas</h3>
 
-      <p v-if="analysis.numeric_statistics.length === 0">
+      <p
+        v-if="
+          analysis.numeric_statistics.length === 0
+        "
+      >
         No hay columnas numéricas.
       </p>
 
@@ -185,8 +241,13 @@ function formatStatistic(value: number | null): string {
     <section class="analysis-section">
       <h3>Distribuciones numéricas</h3>
 
-      <p v-if="analysis.numeric_histograms.length === 0">
-        No hay columnas numéricas para representar.
+      <p
+        v-if="
+          analysis.numeric_histograms.length === 0
+        "
+      >
+        No hay columnas numéricas para
+        representar.
       </p>
 
       <div

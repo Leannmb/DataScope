@@ -132,6 +132,23 @@ Funcionalidades implementadas:
 - Adaptación del diseño para mostrar múltiples gráficos de forma responsive.
 - Manejo automático de datasets sin columnas numéricas.
 
+### V0.9 - Exportación de resultados
+
+Funcionalidades implementadas:
+
+- Exportación completa del análisis en formato JSON.
+- Generación de informes PDF desde el backend.
+- Integración de ReportLab para la creación de documentos PDF.
+- Inclusión del resumen general del dataset.
+- Tabla con nombres, tipos y valores nulos de las columnas.
+- Inclusión de estadísticas descriptivas de las columnas numéricas.
+- Incorporación de histogramas dentro del informe.
+- Generación de gráficos mediante Matplotlib.
+- Portada personalizada con información del dataset.
+- Pie de página con fecha de generación y número de página.
+- Generación automática de conclusiones sobre el dataset.
+- Adaptación de los textos según el número de filas, columnas, duplicados y columnas numéricas.
+- Descarga de informes desde el frontend.
 
 ## Hoja de ruta:
 - [x] V0.1 Analizador básico de CSV
@@ -142,6 +159,6 @@ Funcionalidades implementadas:
 - [x] V0.6 Sistema de autenticación de usuarios
 - [x] V0.7 Dashboard con estadísticas
 - [x] V0.8 Visualización de gráficos
-- [] V0.9 Exportación de resultados
+- [x] V0.9 Exportación de resultados
 - [] V1.0 Primera versión estable
 
