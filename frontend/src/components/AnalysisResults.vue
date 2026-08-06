@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { AnalysisResult } from '../types/analysis'
+import HistogramChart from './HistogramChart.vue'
 
 defineProps<{
   analysis: AnalysisResult
@@ -130,40 +131,75 @@ function formatStatistic(value: number | null): string {
 
             <div>
               <dt>Media</dt>
-              <dd>{{ formatStatistic(statistics.mean) }}</dd>
+              <dd>
+                {{ formatStatistic(statistics.mean) }}
+              </dd>
             </div>
 
             <div>
               <dt>Mediana</dt>
-              <dd>{{ formatStatistic(statistics.median) }}</dd>
+              <dd>
+                {{ formatStatistic(statistics.median) }}
+              </dd>
             </div>
 
             <div>
               <dt>Desviación típica</dt>
-              <dd>{{ formatStatistic(statistics.std) }}</dd>
+              <dd>
+                {{ formatStatistic(statistics.std) }}
+              </dd>
             </div>
 
             <div>
               <dt>Mínimo</dt>
-              <dd>{{ formatStatistic(statistics.min) }}</dd>
+              <dd>
+                {{ formatStatistic(statistics.min) }}
+              </dd>
             </div>
 
             <div>
               <dt>Q1</dt>
-              <dd>{{ formatStatistic(statistics.q1) }}</dd>
+              <dd>
+                {{ formatStatistic(statistics.q1) }}
+              </dd>
             </div>
 
             <div>
               <dt>Q3</dt>
-              <dd>{{ formatStatistic(statistics.q3) }}</dd>
+              <dd>
+                {{ formatStatistic(statistics.q3) }}
+              </dd>
             </div>
 
             <div>
               <dt>Máximo</dt>
-              <dd>{{ formatStatistic(statistics.max) }}</dd>
+              <dd>
+                {{ formatStatistic(statistics.max) }}
+              </dd>
             </div>
           </dl>
         </article>
+      </div>
+    </section>
+
+    <section class="analysis-section">
+      <h3>Distribuciones numéricas</h3>
+
+      <p v-if="analysis.numeric_histograms.length === 0">
+        No hay columnas numéricas para representar.
+      </p>
+
+      <div
+        v-else
+        class="histograms-grid"
+      >
+        <HistogramChart
+          v-for="histogram in analysis.numeric_histograms"
+          :key="histogram.name"
+          :title="histogram.name"
+          :labels="histogram.labels"
+          :counts="histogram.counts"
+        />
       </div>
     </section>
   </section>

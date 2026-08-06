@@ -23,6 +23,7 @@ export interface AnalysisResult {
   column_names: string[]
   column_types: ColumnType[]
   numeric_statistics: NumericStatistics[]
+  numeric_histograms: NumericHistogram[]
   missing_values: Record<string, number>
   missing_percentage: number
   duplicates: number
@@ -35,4 +36,10 @@ export interface AnalysisHistoryItem {
   rows: number
   columns: string[]
   created_at: string
+}
+
+export interface NumericHistogram {
+  name: string
+  labels: string[]
+  counts: number[]
 }

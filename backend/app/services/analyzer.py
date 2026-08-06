@@ -5,7 +5,7 @@ import pandas as pd
 
 from app.services.analyzer_statistics import get_numeric_statistics
 from app.services.analyzer_types import get_column_types
-
+from app.services.analyzer_charts import get_numeric_histograms
 
 def analyze_csv(file_path: str) -> dict[str, Any]:
     """Lee un CSV y devuelve un resumen del conjunto de datos."""
@@ -31,6 +31,8 @@ def analyze_csv(file_path: str) -> dict[str, Any]:
 
     # Estadísticas numéricas
     numeric_statistics = get_numeric_statistics(df)
+
+    numeric_histograms = get_numeric_histograms(df)
 
     # Calidad de los datos
     missing_values = df.isnull()
@@ -70,6 +72,7 @@ def analyze_csv(file_path: str) -> dict[str, Any]:
         "column_names": df.columns.tolist(),
         "column_types": column_types,
         "numeric_statistics": numeric_statistics,
+        "numeric_histograms": numeric_histograms,
         "missing_values": missing_by_column,
         "missing_percentage": missing_percentage,
         "duplicates": duplicates,

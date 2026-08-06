@@ -118,6 +118,21 @@ Funcionalidades implementadas:
 - Gestión automática de la expiración de sesión.
 - Validación del funcionamiento con distintos tipos de datasets.
 
+
+### V0.8 - Visualización de los datos mediante gráficos
+
+Funcionalidades implementadas:
+
+- Integración de Apache ECharts en el frontend.
+- Nuevo componente reutilizable `HistogramChart.vue`.
+- Generación automática de histogramas para todas las columnas numéricas.
+- Cálculo de distribuciones de frecuencia en el backend.
+- Inclusión de histogramas en la respuesta de la API.
+- Representación gráfica integrada dentro de los resultados del análisis.
+- Adaptación del diseño para mostrar múltiples gráficos de forma responsive.
+- Manejo automático de datasets sin columnas numéricas.
+
+
 ## Hoja de ruta:
 - [x] V0.1 Analizador básico de CSV
 - [x] V0.2 API REST
@@ -126,7 +141,7 @@ Funcionalidades implementadas:
 - [x] V0.5 Historial de análisis y mejora de la arquitectura
 - [x] V0.6 Sistema de autenticación de usuarios
 - [x] V0.7 Dashboard con estadísticas
-- [] V0.8 Visualización de gráficos
+- [x] V0.8 Visualización de gráficos
 - [] V0.9 Exportación de resultados
 - [] V1.0 Primera versión estable
 

@@ -21,6 +21,12 @@ class NumericStatisticsResponse(BaseModel):
     max: float | None
 
 
+class NumericHistogramResponse(BaseModel):
+    name: str
+    labels: list[str]
+    counts: list[int]
+
+
 class AnalysisResponse(BaseModel):
     filename: str
     rows: int
@@ -28,6 +34,7 @@ class AnalysisResponse(BaseModel):
     column_names: list[str]
     column_types: list[ColumnTypeResponse]
     numeric_statistics: list[NumericStatisticsResponse]
+    numeric_histograms: list[NumericHistogramResponse]
     missing_values: dict[str, int]
     missing_percentage: float
     duplicates: int
